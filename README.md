@@ -1,56 +1,112 @@
-# Welcome to your Expo app 👋
+# React Native Playground
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A sandbox for experimenting with [Expo](https://expo.dev) SDK 57 and React Native across iOS, Android, and web. It started from the Expo starter template and now includes extra screens and platform-specific UI, including a gesture playground.
 
-## Get started
+Use the versioned Expo 57 docs when changing this project: [docs.expo.dev/versions/v57.0.0](https://docs.expo.dev/versions/v57.0.0/).
 
-1. Install dependencies
+## Stack
 
-   ```bash
-   npm install
-   ```
+| Piece | Version / notes |
+| --- | --- |
+| Expo | `~57.0.24` |
+| React Native | `0.86.3` |
+| React | `19.2.3` |
+| Routing | [Expo Router](https://docs.expo.dev/router/introduction/) (file-based, typed routes) |
+| Animation | `react-native-reanimated` 4.x |
+| Gestures | `react-native-gesture-handler` plus RN responder APIs |
+| Language | TypeScript (strict) |
 
-2. Start the app
+Experiments enabled in `app.json`: **typed routes** and the **React Compiler**.
 
-   ```bash
-   npx expo start
-   ```
+## Screens
 
-In the output, you'll find options to open the app in a
+Native apps use Expo Router [native tabs](https://docs.expo.dev/router/advanced/native-tabs/). Web uses a custom tab bar in `src/components/app-tabs.web.tsx`.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+| Route | File | What it shows |
+| --- | --- | --- |
+| Home (`/`) | `src/app/index.tsx` | Welcome screen, animated Expo mark, and starter hints |
+| Explore (`/explore`) | `src/app/explore.tsx` | Collapsible notes on routing, theming, images, and animation |
+| Gesture (`/gesture`) | `src/app/gesture.tsx` | Drag a marker around the screen; it springs back on release |
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+The Gesture tab is registered on native (`src/components/app-tabs.tsx`). The web tab list currently links Home and Explore only.
 
-## Get a fresh project
+## Project layout
 
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+src/
+  app/                 # Expo Router screens (`_layout.tsx` is the root)
+  components/          # Shared UI (platform files: `*.web.tsx`)
+  constants/theme.ts   # Colors, spacing, fonts
+  hooks/               # Color scheme and theme helpers
+assets/                # Icons, splash, tab images
+app.json               # Expo config (name, icons, plugins)
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Import aliases (see `tsconfig.json`):
 
-### Other setup steps
+- `@/*` → `src/*`
+- `@/assets/*` → `assets/*`
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Getting started
+
+**Requirements:** Node.js **22.13+** (Expo SDK 57). Xcode 26.4+ for iOS; Android Studio with compile/target SDK 36 for Android.
+
+```bash
+npm install
+npm start
+```
+
+That runs `expo start`. From the terminal:
+
+- press `i` for the iOS simulator
+- press `a` for an Android emulator
+- press `w` for web
+
+Or use the scripts:
+
+```bash
+npm run ios
+npm run android
+npm run web
+```
+
+You can also open a [development build](https://docs.expo.dev/develop/development-builds/introduction/), the [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/), an [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/), or [Expo Go](https://expo.dev/go). Expo Go is a sandbox and does not cover every native API.
+
+### Dev menu
+
+- iOS simulator: `Cmd+D`
+- Android emulator: `Cmd+M` / `Ctrl+M`
+- Physical device: shake the device, or press `m` in the Expo CLI
+- Web: browser DevTools
+
+## Scripts
+
+| Script | Command |
+| --- | --- |
+| `npm start` | Start Metro / Expo CLI |
+| `npm run ios` | Start and open iOS |
+| `npm run android` | Start and open Android |
+| `npm run web` | Start and open web |
+| `npm run lint` | Run Expo ESLint (`expo lint`) |
+| `npm run reset-project` | Move `src` and `scripts` aside and leave a blank `src/app` |
+
+`reset-project` is destructive. Only run it if you want a empty Expo Router app instead of this playground.
+
+## How to extend it
+
+1. Add a screen under `src/app/` (for example `src/app/foo.tsx` → `/foo`).
+2. Register it in `src/components/app-tabs.tsx` (native) and, if it should appear on web, in `src/components/app-tabs.web.tsx`.
+3. Reuse `ThemedText` / `ThemedView` and tokens in `src/constants/theme.ts` so light and dark mode stay consistent.
+
+Root layout lives in `src/app/_layout.tsx`. It applies the system color scheme, shows the animated splash overlay, then mounts the tab navigator.
 
 ## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
+- [Expo SDK 57 reference](https://docs.expo.dev/versions/v57.0.0/)
+- [Expo Router](https://docs.expo.dev/router/introduction/)
+- [Using TypeScript](https://docs.expo.dev/guides/typescript/)
+- [Color themes](https://docs.expo.dev/develop/user-interface/color-themes/)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## License
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+MIT (Expo starter license; see `LICENSE`).
